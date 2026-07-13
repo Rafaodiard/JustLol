@@ -1,0 +1,104 @@
+{
+  "issues": [
+    {
+      "title": "🎯 EPIC: MVP - Búsqueda y Estadísticas Básicas",
+      "body": "Core features para la versión 1.0 del producto.\n\n## Objetivo\nImplementar las funcionalidades principales para que usuarios puedan buscar jugadores de LoL y ver sus estadísticas básicas.\n\n## Criterios de Aceptación\n- [x] Búsqueda de jugadores por nombre y región funcional\n- [x] Mostrar estadísticas básicas (tier, LP, winrate)\n- [x] Interfaz responsiva en mobile y desktop\n- [x] Performance aceptable (<2s response time)\n\n## Subtareas\n- Sprint 1: Setup & Infraestructura\n- Sprint 2: API Integration\n- Sprint 3: Frontend Development",
+      "labels": ["epic", "P0", "MVP"]
+    },
+    {
+      "title": "[TECH] Setup repositorio con estructura inicial",
+      "body": "Configurar el repositorio con la estructura base del proyecto.\n\n## Tareas\n- [ ] Crear carpetas: `/backend`, `/frontend`, `/docs`\n- [ ] Crear `.gitignore` apropiado para Node.js + React\n- [ ] Agregar `package.json` raíz con workspaces\n- [ ] Crear GitHub Project (Kanban)\n- [ ] Documentar en wiki del proyecto\n\n## Criterios de Aceptación\n- Repositorio listo para clonar y trabajar\n- Estructura clara y escalable\n- Documentación básica en README",
+      "labels": ["tech", "sprint1", "setup"]
+    },
+    {
+      "title": "[TECH] Configurar Riot API Developer Portal",
+      "body": "Obtener acceso y documentar la integración con Riot Games API.\n\n## Tareas\n- [ ] Registrarse en https://developer.riotgames.com/\n- [ ] Obtener API key de desarrollo\n- [ ] Revisar rate limits y documentación\n- [ ] Documentar endpoints principales\n- [ ] Crear archivo `.env.example` con variables necesarias\n\n## Endpoints Principales\n- `GET /lol/summoner/v4/summoners/by-name/{summonerName}`\n- `GET /lol/league/v4/entries/by-summoner/{summonerId}`\n- `GET /lol/match/v5/matches/by-puuid/{puuid}`\n\n## Criterios de Aceptación\n- API key generada y documentada\n- Equipo tiene acceso a documentación\n- Rate limits entendidos",
+      "labels": ["tech", "sprint1", "api"]
+    },
+    {
+      "title": "[BACKEND] Setup servidor Express básico",
+      "body": "Configurar la estructura base del backend con Express y TypeScript.\n\n## Tareas\n- [ ] Inicializar Node.js + TypeScript\n- [ ] Instalar y configurar Express\n- [ ] Setup estructura MVC (controllers, services, routes)\n- [ ] Configurar logging (winston o similar)\n- [ ] Crear script `dev` y `build`\n- [ ] Setup variables de entorno (.env)\n\n## Dependencias\n- express\n- typescript\n- dotenv\n- cors\n- helmet\n\n## Criterios de Aceptación\n- Servidor inicia en puerto 3001\n- Endpoint `/health` retorna `{ status: \"ok\" }`\n- Estructura lista para agregar rutas",
+      "labels": ["backend", "sprint1", "setup"]
+    },
+    {
+      "title": "[BACKEND] Setup PostgreSQL y migrations",
+      "body": "Configurar base de datos PostgreSQL con herramientas de migración.\n\n## Tareas\n- [ ] Instalar PostgreSQL localmente (o usar Docker)\n- [ ] Setup Prisma ORM\n- [ ] Crear `.env.local` con DATABASE_URL\n- [ ] Schema inicial: tabla `summoners` (cache)\n- [ ] Crear script de migración\n- [ ] Documentar setup en README\n\n## Schema Inicial\n```sql\nCREATE TABLE summoners (\n  id UUID PRIMARY KEY,\n  name VARCHAR(255),\n  region VARCHAR(10),\n  level INTEGER,\n  summoner_id VARCHAR(255) UNIQUE,\n  puuid VARCHAR(255),\n  created_at TIMESTAMP,\n  updated_at TIMESTAMP\n);\n```\n\n## Criterios de Aceptación\n- DB local conectada\n- Migrations funcionan\n- Prisma configurado",
+      "labels": ["backend", "sprint1", "database"]
+    },
+    {
+      "title": "[FRONTEND] Setup React + TypeScript + Vite",
+      "body": "Configurar boilerplate de frontend con React y herramientas modernas.\n\n## Tareas\n- [ ] Inicializar Vite + React + TypeScript\n- [ ] Instalar TailwindCSS\n- [ ] Crear estructura de carpetas (components, pages, hooks, utils)\n- [ ] Setup ESLint + Prettier\n- [ ] Crear script `dev` y `build`\n- [ ] Configurar alias de imports (@/components)\n\n## Dependencias\n- react, react-dom\n- vite\n- tailwindcss\n- axios (para llamadas API)\n\n## Criterios de Aceptación\n- Dev server inicia en puerto 3000\n- Hot reload funciona\n- Estructura lista para componentes",
+      "labels": ["frontend", "sprint1", "setup"]
+    },
+    {
+      "title": "[BACKEND] Endpoint GET /api/summoner/:name/:region",
+      "body": "Crear endpoint que retorna información básica del invocador desde Riot API.\n\n## Implementación\n```\nGET /api/summoner/:name/:region\nResponse: {\n  id: string,\n  name: string,\n  level: number,\n  profileIconId: number,\n  summonerId: string,\n  puuid: string\n}\n```\n\n## Tareas\n- [ ] Crear SummonerController.getSummoner()\n- [ ] Crear SummonerService\n- [ ] Integrar con Riot API\n- [ ] Validar inputs (name, region)\n- [ ] Manejar errores (404, invalid region)\n- [ ] Crear tests unitarios\n\n## Criterios de Aceptación\n- Endpoint retorna datos válidos\n- Validación de inputs funciona\n- Error handling apropiado",
+      "labels": ["backend", "sprint2", "api"]
+    },
+    {
+      "title": "[BACKEND] Implementar Redis para caché",
+      "body": "Setup Redis y crear middleware de caché para Riot API.\n\n## Tareas\n- [ ] Instalar Redis (local o Docker)\n- [ ] Instalar `ioredis` package\n- [ ] Crear middleware de caché\n- [ ] TTL: 1 hora para summoner data\n- [ ] TTL: 30 minutos para stats\n- [ ] Documentar estrategia de invalidación\n\n## Criterios de Aceptación\n- Redis conectado y funcionando\n- Caché reduce llamadas a Riot API\n- TTLs configurados correctamente",
+      "labels": ["backend", "sprint2", "performance"]
+    },
+    {
+      "title": "[BACKEND] Endpoint GET /api/summoner/:summonerId/stats",
+      "body": "Crear endpoint que retorna estadísticas clasificadas del jugador.\n\n## Implementación\n```\nGET /api/summoner/:summonerId/stats\nResponse: {\n  tier: string,\n  rank: string,\n  leaguePoints: number,\n  wins: number,\n  losses: number,\n  winRate: number\n}\n```\n\n## Tareas\n- [ ] Integrar con endpoint League v4 de Riot\n- [ ] Calcular winrate\n- [ ] Manejar casos sin rank\n- [ ] Caché con TTL 30min\n- [ ] Tests unitarios\n\n## Criterios de Aceptación\n- Stats retornadas correctamente\n- Winrate calculado\n- Caché funciona",
+      "labels": ["backend", "sprint2", "api"]
+    },
+    {
+      "title": "[BACKEND] Endpoint GET /api/matches/:summonerId (últimas 20)",
+      "body": "Crear endpoint que retorna historial de últimas partidas con estadísticas.\n\n## Implementación\n```\nGET /api/matches/:summonerId\nResponse: [{\n  id: string,\n  champion: string,\n  result: \"win\" | \"loss\",\n  kda: { kills, deaths, assists },\n  duration: number,\n  timestamp: date\n}]\n```\n\n## Tareas\n- [ ] Integrar con Match History v5\n- [ ] Obtener PUUID del summoner\n- [ ] Procesar match details\n- [ ] Extraer KDA y duración\n- [ ] Caché con TTL 15min\n- [ ] Paginar resultados\n\n## Criterios de Aceptación\n- Últimas 20 partidas retornadas\n- KDA calculado correctamente\n- Ordenado por fecha descendente",
+      "labels": ["backend", "sprint2", "api"]
+    },
+    {
+      "title": "[BACKEND] Error handling y validación global",
+      "body": "Implementar middleware de error handling y validación de inputs.\n\n## Tareas\n- [ ] Middleware global de errores\n- [ ] Validación de inputs con Zod o Joi\n- [ ] Manejo de rate limits de Riot API\n- [ ] Respuestas de error estandarizadas\n- [ ] Logging de errores\n- [ ] Tests de edge cases\n\n## Respuesta de Error\n```json\n{\n  \"error\": {\n    \"code\": \"SUMMONER_NOT_FOUND\",\n    \"message\": \"Summoner not found\",\n    \"statusCode\": 404\n  }\n}\n```\n\n## Criterios de Aceptación\n- Todos los errores manejados\n- Validación en todos los endpoints\n- Rate limits respetados",
+      "labels": ["backend", "sprint2", "quality"]
+    },
+    {
+      "title": "[FRONTEND] Componente SearchBar",
+      "body": "Crear componente de búsqueda de jugadores con selección de región.\n\n## Tareas\n- [ ] Componente SearchBar reutilizable\n- [ ] Dropdown para región (NA, EUW, KR, etc)\n- [ ] Input con placeholder\n- [ ] Botón de búsqueda\n- [ ] Validación de inputs\n- [ ] Responde a Enter key\n- [ ] Styled con TailwindCSS\n\n## Props\n```typescript\ninterface SearchBarProps {\n  onSearch: (name: string, region: string) => void;\n  loading?: boolean;\n}\n```\n\n## Criterios de Aceptación\n- Componente responsivo\n- Validación de inputs\n- UX clara",
+      "labels": ["frontend", "sprint3", "components"]
+    },
+    {
+      "title": "[FRONTEND] Página de Perfil del Invocador",
+      "body": "Crear página que muestre información básica del jugador encontrado.\n\n## Tareas\n- [ ] Layout de perfil con header\n- [ ] Mostrar nombre, nivel, icono\n- [ ] Mostrar tier, rank, LP\n- [ ] Mostrar winrate\n- [ ] Botón para ver historial\n- [ ] Loading skeleton\n- [ ] Error states\n\n## Layout\n```\n┌─────────────────────────┐\n│ [Icon] Name - Level X   │\n│ Tier Rank - LP points   │\n│ Winrate: XX%            │\n└─────────────────────────┘\n```\n\n## Criterios de Aceptación\n- Datos se cargan desde API\n- Responsive en mobile\n- Error handling visible",
+      "labels": ["frontend", "sprint3", "pages"]
+    },
+    {
+      "title": "[FRONTEND] Componente de Estadísticas",
+      "body": "Componente que muestra estadísticas detalladas del jugador.\n\n## Tareas\n- [ ] Card con W/L ratio\n- [ ] Stats por campeón top 5\n- [ ] Gráfico simple de winrate\n- [ ] Mostrar tendencia (↑↓→)\n- [ ] Responsive design\n- [ ] Loading states\n\n## Datos a Mostrar\n- Total Wins/Losses\n- Top 3 Campeones\n- Winrate global\n- Tendencia últimas 10 partidas\n\n## Criterios de Aceptación\n- Datos actualizados\n- Visualización clara\n- Mobile friendly",
+      "labels": ["frontend", "sprint3", "components"]
+    },
+    {
+      "title": "[FRONTEND] Componente Historial de Partidas",
+      "body": "Mostrar lista de últimas partidas con detalles.\n\n## Tareas\n- [ ] Lista de partidas con card por match\n- [ ] Mostrar: Resultado (W/L), Campeón, KDA, Duración\n- [ ] Color coding: Verde para W, Rojo para L\n- [ ] Timestamp relativo (hace 2 horas)\n- [ ] Expandible para más detalles\n- [ ] Paginar o scroll infinito\n\n## Card de Partida\n```\n[W/L] Champion | KDA | 25m | Hace 2h\n```\n\n## Criterios de Aceptación\n- 20 partidas mostradas\n- Scroll suave\n- Información legible",
+      "labels": ["frontend", "sprint3", "components"]
+    },
+    {
+      "title": "[FRONTEND] Diseño responsivo y mobile",
+      "body": "Asegurar que la app funciona perfectamente en todos los dispositivos.\n\n## Tareas\n- [ ] Breakpoints: 320px, 640px, 1024px, 1280px\n- [ ] Testing en Chrome DevTools\n- [ ] Testing en dispositivos reales (si disponible)\n- [ ] Optimizar imágenes\n- [ ] Touch-friendly buttons (48px mín)\n- [ ] Viewport meta tag\n- [ ] Densidad de información apropiada por pantalla\n\n## Devices a Testear\n- iPhone SE (375px)\n- iPhone 12 (390px)\n- iPad (768px)\n- Desktop (1920px)\n\n## Criterios de Aceptación\n- Funcional en 320px a 1920px\n- No horizontal scroll\n- Botones clickeables",
+      "labels": ["frontend", "sprint3", "design"]
+    },
+    {
+      "title": "🎯 EPIC: Post-MVP Features",
+      "body": "Features avanzadas para próximas versiones después del MVP.\n\n## Funcionalidades Planeadas\n- Dashboard de comparativa entre jugadores\n- Gráficos de tendencias (7, 30, 90 días)\n- Recomendaciones de campeones\n- Sistema de seguimiento (favoritos)\n- Notificaciones de streams\n- Análisis de itemización\n\n## Priority\nBaja - Después de validar MVP",
+      "labels": ["epic", "P2", "post-mvp"]
+    },
+    {
+      "title": "[TECH] Setup Tests (Unit + E2E)",
+      "body": "Configurar framework de tests para backend y frontend.\n\n## Backend Tests\n- Jest para unit tests\n- Mocking de Riot API\n- Coverage mínimo 70%\n\n## Frontend Tests\n- Vitest para unit tests\n- React Testing Library para componentes\n- E2E con Playwright (opcional)\n\n## Tareas\n- [ ] Jest setup backend\n- [ ] Vitest setup frontend\n- [ ] Primeros tests de ejemplo\n- [ ] CI/CD integration\n- [ ] Coverage reports\n\n## Criterios de Aceptación\n- Tests corren localmente\n- CI ejecuta tests en cada PR",
+      "labels": ["tech", "quality", "P1"]
+    },
+    {
+      "title": "[DEVOPS] Setup Deploy a Producción",
+      "body": "Configurar CI/CD y deployment automático.\n\n## Tareas\n- [ ] GitHub Actions workflow\n- [ ] Build automático en PR\n- [ ] Deploy a staging\n- [ ] Deploy a producción (manual trigger)\n- [ ] Documentar proceso\n\n## Opciones Deploy\n- Vercel (Frontend)\n- Railway o Render (Backend)\n- GitHub Pages (Docs)\n\n## Criterios de Aceptación\n- Push a main = deploy automático\n- Logs y monitoreo disponibles",
+      "labels": ["devops", "P1"]
+    },
+    {
+      "title": "[LEGAL] Terms of Service y Privacy Policy",
+      "body": "Crear documentos legales requeridos antes de publicar.\n\n## Tareas\n- [ ] Revisar Riot Games API ToS\n- [ ] Crear Privacy Policy\n- [ ] Crear Terms of Service\n- [ ] Documentar GDPR compliance\n- [ ] Agregar disclaimers\n\n## Recursos\n- https://developer.riotgames.com/tos\n- Generador de políticas (iubenda, Termly)\n\n## Criterios de Aceptación\n- Documentos completos\n- Enlazados en footer\n- Cumple con regulaciones",
+      "labels": ["legal", "P1"]
+    }
+  ]
+}
